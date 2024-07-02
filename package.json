@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "serverless-todo-app-frontend",
   "private": true,
   "sideEffects": false,
   "type": "module",
