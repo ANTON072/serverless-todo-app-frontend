@@ -18,9 +18,11 @@
     "@remix-run/cloudflare": "^2.9.2",
     "@remix-run/cloudflare-pages": "^2.9.2",
     "@remix-run/react": "^2.9.2",
+    "classnames": "^2.5.1",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240620.0",
@@ -30,6 +32,7 @@
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
     "autoprefixer": "^10.4.19",
+    "daisyui": "^4.12.10",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
