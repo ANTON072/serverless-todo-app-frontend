@@ -1,4 +1,5 @@
 import {
+  json,
   Links,
   Meta,
   Outlet,
@@ -6,6 +7,13 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import "./tailwind.css";
+import { LoaderFunctionArgs } from "@remix-run/cloudflare";
+
+export async function loader({ context }: LoaderFunctionArgs) {
+  const env = context.cloudflare.env;
+  console.log("env", env);
+  return json({});
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
