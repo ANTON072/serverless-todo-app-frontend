@@ -5,7 +5,7 @@ import { Link } from "@remix-run/react";
 export default function RegisterPage() {
   return (
     <form>
-      <h2 className="font-bold text-xl">新規登録</h2>
+      <h2 className="font-bold text-xl">ログイン</h2>
       <label className="form-control w-full mt-3">
         <div className="label">
           <span className="label-text">メールアドレス</span>
@@ -19,11 +19,11 @@ export default function RegisterPage() {
         <input type="password" className="input input-bordered w-full" />
       </label>
       <button type="submit" className="btn btn-primary w-full mt-5">
-        新規登録
+        ログイン
       </button>
       <div className="mt-5 text-right">
-        <Link to="/login" className="link link-primary">
-          ログインはこちら
+        <Link to="/register" className="link link-primary">
+          新規登録はこちら
         </Link>
       </div>
     </form>
