@@ -2,7 +2,7 @@
 
 import { Link } from "@remix-run/react";
 
-export default function RegisterPage() {
+export default function LoginPage() {
   return (
     <form>
       <h2 className="font-bold text-xl">ログイン</h2>
@@ -21,9 +21,12 @@ export default function RegisterPage() {
       <button type="submit" className="btn btn-primary w-full mt-5">
         ログイン
       </button>
-      <div className="mt-5 text-right">
+      <div className="mt-5 flex justify-center gap-x-5">
         <Link to="/register" className="link link-primary">
           新規登録はこちら
+        </Link>
+        <Link to="/reset-password" className="link link-primary">
+          パスワード再発行はこちら
         </Link>
       </div>
     </form>
