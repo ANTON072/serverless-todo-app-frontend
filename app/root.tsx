@@ -9,6 +9,7 @@ import {
 import "./tailwind.css";
 import { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { useFirebaseAuthState } from "./hooks";
+import { AuthStateProvider } from "./providers";
 
 export async function loader({ context }: LoaderFunctionArgs) {
   const env = context.cloudflare.env;
@@ -26,7 +27,6 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const authState = useFirebaseAuthState();
-  console.log(authState);
 
   return (
     <html lang="ja">
@@ -37,7 +37,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <AuthStateProvider authState={authState}>{children}</AuthStateProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -5,13 +5,13 @@ import { useRootLoader } from "./useRootLoader";
 import { AuthState } from "~/types";
 import { getAuth, getIdToken, onAuthStateChanged, User } from "firebase/auth";
 
-export const initialState: AuthState = {
+export const authInitialState: AuthState = {
   status: "loading",
   user: null,
 };
 
 const getStore = (app: FirebaseApp) => {
-  let state: AuthState = initialState;
+  let state: AuthState = authInitialState;
 
   const handleLogout = async (user: User | null) => {
     try {
@@ -35,7 +35,7 @@ const getStore = (app: FirebaseApp) => {
 
   return {
     getSnapshot: () => state,
-    getServerSnapshot: () => initialState,
+    getServerSnapshot: () => authInitialState,
     subscribe: (callback: () => void) => {
       const auth = getAuth(app);
       const unsubscribe = onAuthStateChanged(auth, async (user) => {
