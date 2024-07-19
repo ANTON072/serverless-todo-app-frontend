@@ -1,4 +1,5 @@
 import {
+  json,
   Links,
   Meta,
   Outlet,
@@ -6,10 +7,30 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 import "./tailwind.css";
+import { LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { useFirebaseAuthState } from "./hooks";
+import { AuthStateProvider, SnackbarProvider } from "./providers";
+import { Snackbar } from "./components/Snackbar";
+
+export async function loader({ context }: LoaderFunctionArgs) {
+  const env = context.cloudflare.env;
+  const firebaseConfig = {
+    apiKey: env.FIREBASE_API_KEY,
+    authDomain: env.FIREBASE_AUTH_DOMAIN,
+    projectId: env.FIREBASE_PROJECT_ID,
+    storageBucket: env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: env.FIREBASE_APP_ID,
+  };
+
+  return json({ firebaseConfig });
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const authState = useFirebaseAuthState();
+
   return (
-    <html lang="en">
+    <html lang="ja">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -17,7 +38,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <SnackbarProvider>
+          <AuthStateProvider authState={authState}>
+            {children}
+          </AuthStateProvider>
+          <Snackbar />
+        </SnackbarProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
