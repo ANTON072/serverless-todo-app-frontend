@@ -73,7 +73,7 @@ export default function RegisterPage() {
     }
   };
 
-  if (authState.status == "login") {
+  if (authState.status === "login") {
     return <Navigate to="/" />;
   }
 
