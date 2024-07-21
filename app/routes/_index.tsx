@@ -1,5 +1,6 @@
 import type { MetaFunction } from "@remix-run/cloudflare";
 import { Link } from "@remix-run/react";
+import { useLogout } from "~/hooks";
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,6 +13,8 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const { onLogout } = useLogout();
+
   return (
     <div className="prose">
       <h1>Home</h1>
@@ -21,6 +24,9 @@ export default function Index() {
         </li>
         <li>
           <Link to="/login">ログイン</Link>
+        </li>
+        <li>
+          <button onClick={() => onLogout()}>ログアウト</button>
         </li>
         <li>
           <Link to="/reset-password">パスワード再発行</Link>
