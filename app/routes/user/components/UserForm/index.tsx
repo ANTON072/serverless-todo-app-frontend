@@ -50,7 +50,13 @@ export const UserForm = () => {
       <form>
         <div className="flex flex-col space-y-3">
           <div className="self-center">
-            <Thumbnail onChange={handleFileChange} url={croppedFileUrl} />
+            <Thumbnail
+              onChange={handleFileChange}
+              url={croppedFileUrl}
+              onClear={() => {
+                setCroppedFile(undefined);
+              }}
+            />
           </div>
           <InputText label="ユーザーID" name="userId" type="text" required />
           <InputText label="名前" name="name" type="text" required />

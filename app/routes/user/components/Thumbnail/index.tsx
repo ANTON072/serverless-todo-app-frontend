@@ -6,9 +6,10 @@ import { Button } from "./Button";
 interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   url?: string;
+  onClear: () => void;
 }
 
-export const Thumbnail = ({ onChange, url }: Props) => {
+export const Thumbnail = ({ onChange, onClear, url }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -28,9 +29,13 @@ export const Thumbnail = ({ onChange, url }: Props) => {
           onChange={onChange}
         />
         <Button
-          type="add"
+          type={url ? "remove" : "add"}
           onClick={() => {
-            inputRef.current?.click();
+            if (url) {
+              onClear();
+            } else {
+              inputRef.current?.click();
+            }
           }}
         />
       </label>
