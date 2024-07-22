@@ -20,15 +20,18 @@
     "@remix-run/react": "^2.9.2",
     "classnames": "^2.5.1",
     "firebase": "^10.12.3",
+    "image-blob-reduce": "^4.1.0",
     "isbot": "^4.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^5.0.7",
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240620.0",
     "@remix-run/dev": "^2.9.2",
     "@tailwindcss/typography": "^0.5.13",
+    "@types/image-blob-reduce": "^4.1.4",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.7.4",

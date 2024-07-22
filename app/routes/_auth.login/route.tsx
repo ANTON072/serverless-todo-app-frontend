@@ -43,8 +43,13 @@ export default function LoginPage() {
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col space-y-3">
         <h2 className="font-bold text-xl">ログイン</h2>
-        <InputText label="メールアドレス" name="email" type="email" />
-        <InputText label="パスワード" name="password" type="password" />
+        <InputText label="メールアドレス" name="email" type="email" required />
+        <InputText
+          label="パスワード"
+          name="password"
+          type="password"
+          required
+        />
       </div>
       <button
         type="submit"
