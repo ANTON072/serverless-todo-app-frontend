@@ -20,7 +20,7 @@ export const Snackbar = () => {
 
   useInterval(() => {
     closeSnackbar();
-  }, 5000);
+  }, 10000);
 
   if (!snackbarState.message) {
     return null;

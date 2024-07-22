@@ -23,6 +23,8 @@ export const SnackbarProvider = ({ children }: SnackbarProviderProps) => {
     type: "info",
   });
 
+  console.log("snackbarState", snackbarState);
+
   const openSnackbar = (params: SnackbarState) => {
     setSnackbar(params);
   };
