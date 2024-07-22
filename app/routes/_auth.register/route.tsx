@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Link, Navigate } from "@remix-run/react";
-import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -11,7 +10,8 @@ import { useState } from "react";
 
 import { InputText } from "~/components";
 import { useAuthState, useSnackbar } from "~/hooks";
-import { translateFirebaseError } from "~/libs";
+
+import { useHandleError } from "../_auth/hooks/useHandleError";
 
 export default function RegisterPage() {
   const auth = getAuth();
@@ -19,22 +19,14 @@ export default function RegisterPage() {
   const { openSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResendEmail, setIsResendEmail] = useState(false);
+  const { handleError } = useHandleError();
 
-  const handleError = (error: unknown) => {
-    if (error instanceof FirebaseError) {
-      openSnackbar({
-        message: translateFirebaseError(error.code),
-        type: "error",
-      });
-      if (error.code === "auth/email-already-in-use") {
+  const registerHandleError = (error: unknown) => {
+    return handleError(error, (errorCode) => {
+      if (errorCode === "auth/email-already-in-use") {
         setIsResendEmail(true);
       }
-    } else {
-      openSnackbar({
-        message: "原因不明のエラーが発生しました",
-        type: "error",
-      });
-    }
+    });
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -52,7 +44,7 @@ export default function RegisterPage() {
         type: "info",
       });
     } catch (error: unknown) {
-      handleError(error);
+      registerHandleError(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -67,7 +59,7 @@ export default function RegisterPage() {
         type: "info",
       });
     } catch (error: unknown) {
-      handleError(error);
+      registerHandleError(error);
     } finally {
       setIsSubmitting(false);
     }
