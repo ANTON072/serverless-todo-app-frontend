@@ -31,6 +31,9 @@ export default function Index() {
         <li>
           <Link to="/reset-password">パスワード再発行</Link>
         </li>
+        <li>
+          <Link to="/user/create">ユーザー登録</Link>
+        </li>
       </ul>
     </div>
   );
