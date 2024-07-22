@@ -1,19 +1,20 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Link, Navigate } from "@remix-run/react";
-import { FirebaseError } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 
 import { InputText } from "~/components";
 import { useAuthState, useSnackbar } from "~/hooks";
-import { translateFirebaseError } from "~/libs";
+
+import { useHandleError } from "../_auth/hooks/useHandleError";
 
 export default function LoginPage() {
   const auth = getAuth();
   const authState = useAuthState();
   const { openSnackbar } = useSnackbar();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { handleError } = useHandleError();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -28,17 +29,7 @@ export default function LoginPage() {
         type: "success",
       });
     } catch (error: unknown) {
-      if (error instanceof FirebaseError) {
-        openSnackbar({
-          message: translateFirebaseError(error.code),
-          type: "error",
-        });
-      } else {
-        openSnackbar({
-          message: "原因不明のエラーが発生しました",
-          type: "error",
-        });
-      }
+      handleError(error);
     } finally {
       setIsSubmitting(false);
     }
