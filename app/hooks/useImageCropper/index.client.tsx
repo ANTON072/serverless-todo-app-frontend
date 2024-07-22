@@ -19,6 +19,7 @@ interface UseImageCropper {
       | "objectFit"
       | "style"
       | "classes"
+      | "cropSize"
     >
   >;
   resizeOptions?: ResizeOptions;
