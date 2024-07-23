@@ -1,6 +1,7 @@
 import { ClientOnly } from "remix-utils/client-only";
 
 import { UserForm } from "../user/components/UserForm";
+import { action } from "../user/action";
 
 export default function UserCreatePage() {
   return (
@@ -10,3 +11,5 @@ export default function UserCreatePage() {
     </div>
   );
 }
+
+export { action };

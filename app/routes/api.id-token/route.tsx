@@ -1,7 +1,11 @@
 import { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { json } from "react-router";
 
-import { createCookieSessionStorage, CookieSessionStorage } from "~/libs";
+import {
+  createCookieSessionStorage,
+  CookieSessionStorage,
+  createActionHandler,
+} from "~/libs";
 import { COOKIE_ID_TOKEN } from "~/config";
 
 const handlePost = async (
@@ -50,22 +54,11 @@ const handleDelete = async (
 };
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
-  const method = request.method.toLowerCase();
   const env = context.cloudflare.env;
-
   const cookieSessionStorage = createCookieSessionStorage(env);
 
-  switch (method) {
-    case "post":
-      return await handlePost(request, cookieSessionStorage);
-    case "delete":
-      return await handleDelete(request, cookieSessionStorage);
-    default:
-      return json(
-        { message: "Method not allowed" },
-        {
-          status: 405,
-        },
-      );
-  }
+  return createActionHandler(request, {
+    post: () => handlePost(request, cookieSessionStorage),
+    delete: () => handleDelete(request, cookieSessionStorage),
+  });
 };

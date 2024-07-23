@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Form, useSubmit } from "@remix-run/react";
 
 import { InputText, Modal } from "~/components";
 import useImageCropper from "~/hooks/useImageCropper/index.client";
@@ -14,20 +15,26 @@ export const UserForm = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const { setInputObjectURL, cropperComponent, onGenerateCroppedImage } =
-    useImageCropper({
-      cropOptions: {
-        cropShape: "round",
-        aspect: 1,
-        cropSize: {
-          width: 300,
-          height: 300,
-        },
+  const submit = useSubmit();
+
+  const {
+    setInputObjectURL,
+    cropperComponent,
+    onGenerateCroppedImage,
+    onCropReset,
+  } = useImageCropper({
+    cropOptions: {
+      cropShape: "round",
+      aspect: 1,
+      cropSize: {
+        width: 300,
+        height: 300,
       },
-      resizeOptions: {
-        max: 500,
-      },
-    });
+    },
+    resizeOptions: {
+      max: 500,
+    },
+  });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -43,11 +50,24 @@ export const UserForm = () => {
     setCroppedFile(blob);
     modalRef.current?.close();
     setIsLoading(false);
+    onCropReset();
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    if (croppedFile) {
+      formData.append("avatar", croppedFile, "avatar.jpg");
+    }
+
+    submit(formData, { method: "post" });
   };
 
   return (
     <>
-      <form>
+      <Form method="post" onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="flex flex-col space-y-3">
           <div className="self-center">
             <Thumbnail
@@ -55,6 +75,7 @@ export const UserForm = () => {
               url={croppedFileUrl}
               onClear={() => {
                 setCroppedFile(undefined);
+                onCropReset();
               }}
             />
           </div>
@@ -64,7 +85,7 @@ export const UserForm = () => {
         <button type="submit" className="btn btn-primary w-full mt-8">
           新規登録
         </button>
-      </form>
+      </Form>
       <Modal ref={modalRef}>
         <div className="relative w-xl h-[400px]">{cropperComponent}</div>
         <div className="modal-action">
