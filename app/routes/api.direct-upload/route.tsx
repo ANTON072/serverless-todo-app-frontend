@@ -5,7 +5,7 @@ import {
 } from "@remix-run/cloudflare";
 import invariant from "tiny-invariant";
 import { createActionHandler } from "~/libs";
-import { CfDirectUploadResponse } from "~/types";
+import { CfImageDirectUploadResponse } from "~/types";
 
 const handlePost = async (request: Request, context: AppLoadContext) => {
   if (request.headers.get("Content-Type") !== "application/json") {
@@ -40,7 +40,7 @@ const handlePost = async (request: Request, context: AppLoadContext) => {
       { status: response.status },
     );
   }
-  const data = (await response.json()) as CfDirectUploadResponse;
+  const data = (await response.json()) as CfImageDirectUploadResponse;
 
   return json(data, { status: 200 });
 };

@@ -1,7 +1,17 @@
 import { ClientOnly } from "remix-utils/client-only";
 
+import { json } from "@remix-run/react";
+import { ActionFunctionArgs } from "@remix-run/cloudflare";
+
 import { UserForm } from "../user/components/UserForm";
-import { action } from "../user/action";
+
+export async function action({ request }: ActionFunctionArgs) {
+  console.log("Hello Action");
+  const body = await request.formData();
+  console.log(body);
+
+  return json({ message: "Token saved" });
+}
 
 export default function UserCreatePage() {
   return (
@@ -11,5 +21,3 @@ export default function UserCreatePage() {
     </div>
   );
 }
-
-export { action };

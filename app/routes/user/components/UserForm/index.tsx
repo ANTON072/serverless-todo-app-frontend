@@ -3,19 +3,24 @@ import { Form, useSubmit } from "@remix-run/react";
 
 import { InputText, Modal } from "~/components";
 import useImageCropper from "~/hooks/useImageCropper/index.client";
-
+import { convertBlobToFile } from "~/utils";
 import { Thumbnail } from "../Thumbnail";
+import { useCfImage } from "~/hooks";
 
 export const UserForm = () => {
   const modalRef = useRef<HTMLDialogElement>(null);
 
-  const [croppedFile, setCroppedFile] = useState<Blob>();
+  const [croppedFile, setCroppedFile] = useState<File>();
 
   const croppedFileUrl = croppedFile ? URL.createObjectURL(croppedFile) : "";
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [orgFile, setOrgFile] = useState<File>();
+
   const submit = useSubmit();
+
+  const { uploadImage } = useCfImage();
 
   const {
     setInputObjectURL,
@@ -32,13 +37,14 @@ export const UserForm = () => {
       },
     },
     resizeOptions: {
-      max: 500,
+      max: 400,
     },
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files?.[0];
+    setOrgFile(file);
     const objectURL = URL.createObjectURL(file);
     setInputObjectURL(objectURL);
     modalRef.current?.showModal();
@@ -47,19 +53,27 @@ export const UserForm = () => {
   const handleCropComplete = async () => {
     setIsLoading(true);
     const blob = (await onGenerateCroppedImage()) as Blob;
-    setCroppedFile(blob);
+    const file = convertBlobToFile(
+      blob,
+      orgFile?.name || "avatar.jpg",
+      orgFile?.type,
+    );
+    setCroppedFile(file);
     modalRef.current?.close();
     setIsLoading(false);
     onCropReset();
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
 
     if (croppedFile) {
-      formData.append("avatar", croppedFile, "avatar.jpg");
+      const avatarImageData = await uploadImage(croppedFile, "avatar");
+      if (avatarImageData) {
+        formData.append("avatar", avatarImageData.result.id);
+      }
     }
 
     submit(formData, { method: "post" });
@@ -67,7 +81,7 @@ export const UserForm = () => {
 
   return (
     <>
-      <Form method="post" onSubmit={handleSubmit} encType="multipart/form-data">
+      <Form method="post" onSubmit={handleSubmit}>
         <div className="flex flex-col space-y-3">
           <div className="self-center">
             <Thumbnail
