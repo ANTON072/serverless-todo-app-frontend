@@ -1,17 +1,15 @@
 import { CfImageDirectUploadResponse, CfImageUploadResponse } from "~/types";
+import { useRootLoader } from "./useRootLoader";
 
 export const useCfImage = () => {
+  const { cloudflareConfig } = useRootLoader();
+
   const uploadImage = async (file: File, place: string = "") => {
-    const directUploadResponse = await fetch("/api/direct-upload", {
+    const formData = new FormData();
+    formData.append("meta", JSON.stringify({ place }));
+    const directUploadResponse = await fetch("/api/cf-images", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        meta: {
-          place,
-        },
-      }),
+      body: formData,
     });
     if (!directUploadResponse.ok) {
       throw new Error("Failed to upload image");
@@ -22,11 +20,11 @@ export const useCfImage = () => {
       throw new Error("Failed to upload image");
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
+    const formFileData = new FormData();
+    formFileData.append("file", file);
     const uploadResponse = await fetch(directUpload.result.uploadURL, {
       method: "POST",
-      body: formData,
+      body: formFileData,
     });
     if (!uploadResponse.ok) {
       throw new Error("Failed to upload image");
@@ -34,7 +32,22 @@ export const useCfImage = () => {
     return uploadResponse.json() as Promise<CfImageUploadResponse>;
   };
 
-  const deleteImage = async () => {};
+  const deleteImage = async (imageId: string) => {
+    const params = new URLSearchParams({
+      imageId,
+    });
+    const response = await fetch(`/api/cf-images?${params}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to delete image");
+    }
+    return response.json();
+  };
 
-  return { uploadImage, deleteImage };
+  const getImage = (imageId: string, variant: string) => {
+    return `${cloudflareConfig.imageUrl}/${imageId}/${variant}`;
+  };
+
+  return { uploadImage, deleteImage, getImage };
 };

@@ -4,6 +4,7 @@ name = "frontend"
 pages_build_output_dir = "./build/client"
 
 [vars]
+CLOUDFLARE_IMAGES_PROVIDE_URL = "https://imagedelivery.net/OYEg37ELuKSl07ux6tX6eA"
 ENV = "development"
 FIREBASE_API_KEY = "AIzaSyBsZsDljy-CAtK3auolbPINPZEIRhrpU2I"
 FIREBASE_APP_ID = "1:1027324171337:web:451ca283d07da6ce3f5b98"
@@ -13,6 +14,7 @@ FIREBASE_PROJECT_ID = "serverless-todo-app-e65a1"
 FIREBASE_STORAGE_BUCKET = "serverless-todo-app-e65a1.appspot.com"
 
 [env.production.vars]
+CLOUDFLARE_IMAGES_PROVIDE_URL = "https://imagedelivery.net/OYEg37ELuKSl07ux6tX6eA"
 ENV = "production"
 FIREBASE_API_KEY = "AIzaSyBsZsDljy-CAtK3auolbPINPZEIRhrpU2I"
 FIREBASE_APP_ID = "1:1027324171337:web:451ca283d07da6ce3f5b98"

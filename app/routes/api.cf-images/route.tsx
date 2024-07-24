@@ -3,24 +3,18 @@ import {
   AppLoadContext,
   json,
 } from "@remix-run/cloudflare";
-import invariant from "tiny-invariant";
 import { createActionHandler } from "~/libs";
 import { CfImageDirectUploadResponse } from "~/types";
 
 const handlePost = async (request: Request, context: AppLoadContext) => {
-  if (request.headers.get("Content-Type") !== "application/json") {
-    return new Response("Invalid content type", { status: 400 });
-  }
-  // バリデーション
-  const body = (await request.json()) as { meta: Record<string, string> };
-  invariant(body, "Body is required");
-  invariant(body.meta, "Meta is required");
+  const body = await request.formData();
+  const meta = body.get("meta");
 
   const CF_ACCOUNT_ID = context.cloudflare.env.CLOUDFLARE_ACCOUNT_ID;
   const CF_API_TOKEN = context.cloudflare.env.CLOUDFLARE_IMAGES_API_TOKEN;
 
   const formData = new FormData();
-  formData.append("metadata", JSON.stringify(body.meta));
+  formData.append("metadata", meta ?? "");
 
   const response = await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/images/v2/direct_upload`,
@@ -45,8 +39,38 @@ const handlePost = async (request: Request, context: AppLoadContext) => {
   return json(data, { status: 200 });
 };
 
+const handleDelete = async (request: Request, context: AppLoadContext) => {
+  const CF_ACCOUNT_ID = context.cloudflare.env.CLOUDFLARE_ACCOUNT_ID;
+  const CF_API_TOKEN = context.cloudflare.env.CLOUDFLARE_IMAGES_API_TOKEN;
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
+  const imageId = searchParams.get("imageId");
+  if (!imageId) {
+    return json({ error: "Image ID is required" }, { status: 400 });
+  }
+
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/images/v1/${imageId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${CF_API_TOKEN}`,
+      },
+    },
+  );
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    return json(
+      { error: "Failed to delete", details: errorData },
+      { status: response.status },
+    );
+  }
+  return json({ success: true }, { status: 200 });
+};
+
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   return createActionHandler(request, {
     post: () => handlePost(request, context),
+    delete: () => handleDelete(request, context),
   });
 };

@@ -6,7 +6,6 @@ import { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { UserForm } from "../user/components/UserForm";
 
 export async function action({ request }: ActionFunctionArgs) {
-  console.log("Hello Action");
   const body = await request.formData();
   console.log(body);
 

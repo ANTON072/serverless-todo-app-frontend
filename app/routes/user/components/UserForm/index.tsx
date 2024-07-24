@@ -20,7 +20,9 @@ export const UserForm = () => {
 
   const submit = useSubmit();
 
-  const { uploadImage } = useCfImage();
+  const { uploadImage, deleteImage, getImage } = useCfImage();
+
+  const [imageId, setImageId] = useState<string | null>(null);
 
   const {
     setInputObjectURL,
@@ -72,8 +74,9 @@ export const UserForm = () => {
     if (croppedFile) {
       const avatarImageData = await uploadImage(croppedFile, "avatar");
       if (avatarImageData) {
-        formData.append("avatar", avatarImageData.result.id);
+        formData.append("avatarImageId", avatarImageData.result.id);
       }
+      setImageId(avatarImageData.result.id);
     }
 
     submit(formData, { method: "post" });
@@ -100,6 +103,21 @@ export const UserForm = () => {
           新規登録
         </button>
       </Form>
+      {imageId && (
+        <>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              deleteImage(imageId);
+            }}
+          >
+            削除
+          </button>
+          <div>
+            <img src={getImage(imageId, "avatar")} alt="avatar" />
+          </div>
+        </>
+      )}
       <Modal ref={modalRef}>
         <div className="relative w-xl h-[400px]">{cropperComponent}</div>
         <div className="modal-action">

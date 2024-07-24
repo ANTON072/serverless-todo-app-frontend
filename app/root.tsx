@@ -23,7 +23,11 @@ export async function loader({ context }: LoaderFunctionArgs) {
     appId: env.FIREBASE_APP_ID,
   };
 
-  return json({ firebaseConfig });
+  const cloudflareConfig = {
+    imageUrl: env.CLOUDFLARE_IMAGES_PROVIDE_URL,
+  };
+
+  return json({ firebaseConfig, cloudflareConfig });
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {

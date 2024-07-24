@@ -12,4 +12,5 @@ interface Env {
   SESSION_SECRET: string;
   CLOUDFLARE_ACCOUNT_ID: string;
   CLOUDFLARE_IMAGES_API_TOKEN: string;
+  CLOUDFLARE_IMAGES_PROVIDE_URL: string;
 }
