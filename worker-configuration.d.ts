@@ -10,4 +10,6 @@ interface Env {
   FIREBASE_PROJECT_ID: string;
   FIREBASE_STORAGE_BUCKET: string;
   SESSION_SECRET: string;
+  CLOUDFLARE_ACCOUNT_ID: string;
+  CLOUDFLARE_IMAGES_API_TOKEN: string;
 }

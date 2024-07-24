@@ -1,0 +1,13 @@
+POST http://localhost:5173/api/direct-upload
+Content-Type: application/json
+
+{
+  "meta": {
+    "place": "avatar"
+  }
+}
+
+
+###6
+curl https://api.cloudflare.com/client/v4/accounts/b2d9bfe1a2ca9b269db176d75efc759c/images/v1/761cb5ca-8a24-4f1f-d1a9-454e879c7601 \
+--header "Authorization: Bearer _SKDUlAf628b_7N2WnrVhADgQ19FXs8oxHIw9-Mr"
