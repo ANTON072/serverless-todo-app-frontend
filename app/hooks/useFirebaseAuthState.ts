@@ -45,10 +45,11 @@ const getStore = (app: FirebaseApp) => {
             // idTokenを取得
             const idToken = await getIdToken(user);
             // Remix側でCookieをセットする
+            const formData = new FormData();
+            formData.append("idToken", idToken);
             const response = await fetch("/api/id-token", {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ idToken }),
+              body: formData,
             });
             if (!response.ok) {
               throw new Error("Failed to set ID token");

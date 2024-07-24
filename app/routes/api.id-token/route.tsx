@@ -12,8 +12,8 @@ const handlePost = async (
   request: Request,
   cookieSessionStorage: CookieSessionStorage,
 ) => {
-  const data = await request.json();
-  const { idToken } = data as { idToken: string };
+  const body = await request.formData();
+  const idToken = body.get("idToken");
   const { getSession, commitSession } = cookieSessionStorage;
 
   // リクエストからセッションを取得
