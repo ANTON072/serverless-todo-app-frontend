@@ -36,5 +36,5 @@ export const useCfImage = () => {
 
   const deleteImage = async () => {};
 
-  return { uploadImage };
+  return { uploadImage, deleteImage };
 };
